@@ -1,0 +1,33 @@
+:root {
+    --primary-color: #8ab4f8;
+    --secondary-color: #81c995;
+    --error-color: #f28b82;
+    --background-color: #202124;
+    --surface-color: #2d2e30;
+    --text-color: #e8eaed;
+    --text-secondary: #9aa0a6;
+    --border-color: #3c4043;
+}
+
+.chat-messages {
+    background-color: var(--background-color);
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+}
+
+#user-input {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.input-area {
+    background-color: var(--surface-color);
+}
+
+.evaluation {
+    background-color: rgba(138, 180, 248, 0.1);
+}
+
+.evaluation strong {
+    color: var(--primary-color);
+}

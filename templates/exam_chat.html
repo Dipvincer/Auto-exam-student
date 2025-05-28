@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экзаменационный чат</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/dark-theme.css" id="theme-style">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Экзаменационный чат-бот</h1>
+            <div class="header-controls">
+                <div class="exam-info" id="exam-info">
+                    <span class="exam-subject">Основы программирования</span>
+                    <span class="exam-progress">Вопрос 1 из 4</span>
+                </div>
+                <button id="theme-toggle">Темная тема</button>
+            </div>
+        </header>
+        
+        <main class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+            </div>            
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Введите ваш ответ..." autocomplete="off">
+                <button id="send-button">Отправить</button>
+                <button id="ready-button">Готов</button>
+            </div>
+        </main>
+    </div>
+
+    <div class="metrics-panel" id="metrics-panel">
+        <h3>Метрики системы</h3>
+        <div id="metrics-content"></div>
+    </div>
+
+    <script src="/static/js/chat.js"></script>
+</body>
+</html>
