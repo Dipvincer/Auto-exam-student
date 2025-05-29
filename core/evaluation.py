@@ -116,30 +116,30 @@ class AnswerEvaluator:
 
     def _get_llm_feedback(self, student_answer, reference_answer, question, models=None):
         time.sleep(1)
-        prompt = exam_prompts.ExamPrompts.EVALUATION_PROMPT_LIGHT.format(
+        prompt = exam_prompts.ExamPrompts.EVALUATION_PROMPT.format(
             question=question,
             reference_answer=reference_answer,
             student_answer=student_answer
         )
 
         response_all = []
-        if "deepseek_v3" in models:
-            response_all.append(self.llm.call_deepseek_v3(prompt, temperature=0.2, max_tokens=1000))
-        if "deepseek_r1" in models:
-            response_all.append(self.llm.call_deepseek_r1(prompt, temperature=0.2, max_tokens=1000))
-        if "llama_3.1_nemotron" in models:
-            response_all.append(self.llm.call_llama(prompt, temperature=0.2, max_tokens=1000))
-        if "qwen3_325b" in models:
-            response_all.append(self.llm.call_qwen(prompt, temperature=0.2, max_tokens=1000))
-        if "gemini_2.5_flash" in models:
-            response_all.append(self.llm.call_gemini_flash(prompt, temperature=0.2, max_tokens=1000))
-        if "grok3_mini" in models:
-            response_all.append(self.llm.call_grok_mini(prompt, temperature=0.2, max_tokens=1000))
-        if "gpt4o_mini" in models:
+        if models is None:
             response_all.append(self.llm.call_gpt_mini(prompt, temperature=0.2, max_tokens=1000))
-
-        if not response_all:
-            response_all.append(self.llm.call_deepseek_v3(prompt, temperature=0.2, max_tokens=1000))
+        else:
+            if "deepseek_v3" in models:
+                response_all.append(self.llm.call_deepseek_v3(prompt, temperature=0.2, max_tokens=1000))
+            if "deepseek_r1" in models:
+                response_all.append(self.llm.call_deepseek_r1(prompt, temperature=0.2, max_tokens=1000))
+            if "llama_3.1_nemotron" in models:
+                response_all.append(self.llm.call_llama(prompt, temperature=0.2, max_tokens=1000))
+            if "qwen3_325b" in models:
+                response_all.append(self.llm.call_qwen(prompt, temperature=0.2, max_tokens=1000))
+            if "gemini_2.5_flash" in models:
+                response_all.append(self.llm.call_gemini_flash(prompt, temperature=0.2, max_tokens=1000))
+            if "grok3_mini" in models:
+                response_all.append(self.llm.call_grok_mini(prompt, temperature=0.2, max_tokens=1000))
+            if "gpt4o_mini" in models:
+                response_all.append(self.llm.call_gpt_mini(prompt, temperature=0.2, max_tokens=1000))
         
         score = 0
         feedback = "Не удалось автоматически оценить ответ"
@@ -148,14 +148,14 @@ class AnswerEvaluator:
         if response_all:
             for response in response_all:
                 try:
-                    #score_line = next(line for line in response.split('\n') if line.startswith('Оценка:'))
-                    #score = int(score_line.split(':')[1].strip())
-                    #score = max(1, min(10, score))
+                    score_line = next(line for line in response.split('\n') if line.startswith('Оценка:'))
+                    score = int(score_line.split(':')[1].strip())
+                    score = max(1, min(10, score))
                     
-                    #feedback_line = next(line for line in response.split('\n') if line.startswith('Комментарий:'))
-                    #feedback = feedback_line.split(':', 1)[1].strip()
+                    feedback_line = next(line for line in response.split('\n') if line.startswith('Комментарий:'))
+                    feedback = feedback_line.split(':', 1)[1].strip()
 
-                    results.append({"score": int(response), "feedback": ''})
+                    results.append({"score": score, "feedback": feedback})
                 except (StopIteration, ValueError):
                     logger.warning(f"Не удалось распарсить ответ LLM: {response}")
         
@@ -166,4 +166,4 @@ class AnswerEvaluator:
         """Комбинируем оценку similarity и LLM"""
         llm_score = llm_feedback.get("score")
 
-        return int(round((similarity_score * 0.4 + llm_score * 0.6)))
+        return int(round((similarity_score * 0.2 + llm_score * 0.8)))
